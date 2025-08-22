@@ -6,7 +6,8 @@ import { IconMenu2, IconX, IconChevronRight, IconChevronLeft } from "@tabler/ico
 
 interface Links {
     label: string;
-    href: string;
+    href?: string;
+    onClick?: () => void;
     icon: React.JSX.Element | React.ReactNode;
 }
 
@@ -182,6 +183,7 @@ export const SidebarLink = ({
     const { open, animate } = useSidebar();
     return (
         <a
+            onClick={link.onClick}
             href={link.href}
             className={cn(
                 `flex items-center justify-start gap-2 group/sidebar py-2`,

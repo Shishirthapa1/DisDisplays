@@ -13,32 +13,35 @@ export type Product = {
   };
 };
 
-// export type ProductTabs = {
-//   additionalInfo: ProductAdditionalInfo;
-//   reviews: ProductReviews;
-// };
+export interface CreatePaymentIntentResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  clientSecret: string;
+}
 
-// export type ProductAdditionalInfo = {
-//   details: ProductDetails;
-//   specifications: ProductSpecifications;
-// };
+export interface CreateOrderPayload {
+  user: {
+    fullname: string;
+    email: string;
+    phoneNumber: string;
+  };
+  shippingAddress: {
+    street: string;
+    addressLine: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  };
+  products: {
+    product: string; // Product ID
+    quantity: number;
+  }[];
+  totalAmount: number;
+}
 
-// type ProductDetails = string[];
-
-// type ProductSpecifications = {
-//   label: string;
-//   items: { label: string; value: string }[];
-// }[];
-
-// export type ProductReviews = {
-//   id: number;
-//   profile: {
-//     image: {
-//       src: string;
-//       alt: string;
-//     };
-//     name: string;
-//   };
-//   rating: number;
-//   comment: string;
-// }[];
+export interface CreateOrderResponse {
+  success: boolean;
+  order: any;
+}

@@ -3,6 +3,19 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
+    user: {
+      fullname: { type: String, required: true, trim: true },
+      email: { type: String, required: true, lowercase: true },
+      phoneNumber: { type: String, required: true },
+    },
+    shippingAddress: {
+      street: { type: String, required: true, trim: true },
+      addressLine: { type: String, required: true },
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+      postalCode: { type: String, required: true },
+      country: { type: String, required: true },
+    },
     products: [
       {
         product: {
@@ -21,22 +34,11 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Optional, in case you support user accounts
-    },
+
     status: {
       type: String,
       enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
       default: "pending",
-    },
-    shippingAddress: {
-      type: String,
-      required: true,
-    },
-    phoneNumber: {
-      type: String,
-      required: true,
     },
   },
   { timestamps: true }

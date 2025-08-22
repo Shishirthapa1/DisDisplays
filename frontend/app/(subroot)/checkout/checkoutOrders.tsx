@@ -5,35 +5,14 @@ import Image from "next/image";
 
 // ui
 import DeliveryOption from "@/app/(subroot)/checkout/deliveryOption";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
-const orders = [
-  {
-    id: 1,
-    image: "/images/sumplekuping-1.png",
-    name: "Skullcandy - Rail True Wireless Earbuds",
-    quantity: 2,
-    price: "$120.00",
-    color: "Black",
-  },
-  {
-    id: 2,
-    image: "/images/sumplekuping-2.png",
-    name: "Sony - WH-CH720N Wireless Noise Canceling",
-    quantity: 1,
-    price: "$420.00",
-    color: "White",
-  },
-  {
-    id: 3,
-    image: "/images/sumplekuping-4.png",
-    name: "Bose QuietComfort Headphones",
-    quantity: 3,
-    price: "$70.00",
-    color: "Black",
-  },
-];
+
 
 const CheckoutOrders = () => {
+  const orders = useSelector((state: RootState) => state.cart.items);
+
   return (
     <div className="space-y-6 rounded-md border border-[#6C7275] p-6">
       <p className="font-poppins text-lg font-semibold text-[#141718]">
@@ -49,7 +28,7 @@ const CheckoutOrders = () => {
   );
 };
 
-const OrderItem = ({ data }: { data: (typeof orders)[0] }) => {
+const OrderItem = ({ data }: any) => {
   return (
     <div className="flex flex-col gap-4 border-b border-[#E8ECEF] py-3 first:pt-0 last:border-b-0 last:pb-0">
       <div className="flex items-center gap-4">
@@ -68,16 +47,12 @@ const OrderItem = ({ data }: { data: (typeof orders)[0] }) => {
               {data.name}
             </p>
             <p className="hidden min-w-max font-inter text-sm font-semibold text-[#141718] sm:block">
-              {data.quantity} x {data.price}
+              {data.quantity} x {data.price.toFixed(2)}
             </p>
           </div>
 
           <p className="font-inter text-sm font-semibold text-[#141718] sm:hidden">
-            {data.quantity} x {data.price}
-          </p>
-
-          <p className="font-inter text-xs font-normal text-[#6C7275]">
-            Color: {data.color}
+            {data.quantity} x {data.price.toFixed(2)}
           </p>
 
           <div className="hidden sm:block">

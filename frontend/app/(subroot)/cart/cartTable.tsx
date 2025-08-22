@@ -6,6 +6,7 @@ import { RootState } from "@/redux/store";
 
 const CartTable = () => {
   const cartProducts = useSelector((state: RootState) => state.cart.items);
+  console.log("Cart Products:", cartProducts);
 
   return (
     <table className="h-fit w-full">
@@ -18,13 +19,20 @@ const CartTable = () => {
             Quantity
           </th>
           <th className="hidden pb-6 text-center font-poppins lg:text-base md:text-sm text-xs font-semibold text-[#141718] sm:table-cell">
-            Price
+            Unit Price
           </th>
           <th className="hidden pb-6 text-center font-poppins lg:text-base md:text-sm text-xs font-semibold text-[#141718] sm:table-cell">
             Subtotal
           </th>
+          <th className="hidden sm:table-cell pb-6 text-center font-poppins font-semibold text-[#141718] text-xs md:text-sm lg:text-base">
+            Total{" "}
+            <span className="block text-[8px] md:text-[10px] lg:text-xs text-green-500">
+              (After Discount)
+            </span>
+          </th>
+
           <th className="hidden pb-6 text-center font-poppins lg:text-base md:text-sm text-xs font-semibold text-[#141718] sm:table-cell">
-            Total (After Discount)
+            Action
           </th>
         </tr>
       </thead>

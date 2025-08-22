@@ -57,6 +57,34 @@ const cartSlice = createSlice({
   },
 });
 
+// ----------------- SELECTORS -----------------
+
+export const selectCartItems = (state: { cart: CartState }) => state.cart.items;
+
+// Total items (quantity sum)
+export const selectCartCount = (state: { cart: CartState }) =>
+  state.cart.items.reduce((sum, item) => sum + item.quantity, 0);
+
+// Subtotal (before discount)
+export const selectSubtotal = (state: { cart: CartState }) =>
+  state.cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+// Total after discount
+export const selectTotal = (state: { cart: CartState }) =>
+  state.cart.items.reduce((sum, item) => {
+    const discount = item.discount ?? 0;
+    const priceAfterDiscount = item.price - (item.price * discount) / 100;
+    return sum + priceAfterDiscount * item.quantity;
+  }, 0);
+
+// Total discount amount saved
+export const selectTotalDiscount = (state: { cart: CartState }) =>
+  state.cart.items.reduce((sum, item) => {
+    const discount = item.discount ?? 0;
+    const discountPerUnit = (item.price * discount) / 100;
+    return sum + discountPerUnit * item.quantity;
+  }, 0);
+
 export const { addToCart, removeFromCart, updateQuantity, clearCart } =
   cartSlice.actions;
 export default cartSlice.reducer;

@@ -259,17 +259,7 @@ const ProductDetail = ({ productId }: { productId: string }) => {
                             </Button>
                             <Button
                                 className="w-full"
-                                onClick={() =>
-                                    dispatch(addToCart({
-                                        id: product._id,
-                                        name: product?.name,
-                                        price: product?.price,
-                                        discount: product?.discount,
-                                        stock: product?.stock,
-                                        quantity: 1,
-                                        image: product?.image
-                                    }))
-                                }
+                                onClick={handleAddToCart}
                             >
                                 Add to Cart
                             </Button>

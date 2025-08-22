@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 import userRoutes from "./routes/user.routes";
 import productRoutes from "./routes/product.routes";
 import categoryRoutes from "./routes/category.routes";
+import paymentRoutes from "./routes/payment.routes";
+import orderRoutes from "./routes/order.routes";
 
 import { errorHandler } from "./middlewares/error.middleware";
 
@@ -25,6 +27,8 @@ const baseApi = "/api/v1/en";
 app.use(`${baseApi}/users`, userRoutes);
 app.use(`${baseApi}/products`, productRoutes);
 app.use(`${baseApi}/categories`, categoryRoutes);
+app.use(`${baseApi}/payments`, paymentRoutes);
+app.use(`${baseApi}/order`, orderRoutes);
 
 // Error handler
 app.use(errorHandler);

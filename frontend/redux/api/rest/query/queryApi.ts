@@ -34,6 +34,30 @@ const queryApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Products"],
     }),
+
+    getAllOrders: builder.query<any, void>({
+      query: () => ({
+        url: "order",
+        method: "GET",
+      }),
+      providesTags: ["Orders"],
+    }),
+
+    getOrderById: builder.query<any, { orderId: string }>({
+      query: ({ orderId }) => ({
+        url: `order/${orderId}`,
+        method: "GET",
+      }),
+      providesTags: ["OrderById"],
+    }),
+
+    getUserById: builder.query<any, { id: string }>({
+      query: ({ id }) => ({
+        url: `users/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["UserById"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -43,4 +67,7 @@ export const {
   useGetCategoryByIdQuery,
   useGetAllProductsQuery,
   useGetProductByIdQuery,
+  useGetAllOrdersQuery,
+  useGetOrderByIdQuery,
+  useGetUserByIdQuery,
 } = queryApi;

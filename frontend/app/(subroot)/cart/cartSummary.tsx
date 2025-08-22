@@ -1,11 +1,16 @@
 "use client";
 
-// package
+// packages
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 // lib
 import { cn } from "@/lib/utils";
-import { useCartProductsStore } from "@/stores/zustand";
+import { selectSubtotal, selectTotal, selectTotalDiscount } from "@/redux/slices/cartSlice";
+import { useRouter } from "next/navigation";
+
+// redux selectors
+
 
 const cartSelectMenus: CartSelectItemProps["data"][] = [
   {
@@ -26,12 +31,17 @@ const cartSelectMenus: CartSelectItemProps["data"][] = [
 ];
 
 const CartSummary = () => {
-  const total = useCartProductsStore((state) => state.total);
+  const subtotal: number = useSelector(selectSubtotal);
+  const total: number = useSelector(selectTotal);
+  const totalDiscount: number = useSelector(selectTotalDiscount);
+  const router = useRouter();
+
   const [cartSelect, setCartSelect] = useState<string>(cartSelectMenus[0].name);
 
   const handleCartSelect = (value: string) => {
     setCartSelect(value);
   };
+
 
   return (
     <div className="h-fit w-full space-y-4 rounded-md border border-[#6C7275] p-4 lg:p-6">
@@ -39,7 +49,10 @@ const CartSummary = () => {
         Cart summary
       </p>
 
-      {/* <div className="space-y-4">
+      {/* Shipping Options */}
+      {/* Uncomment if you want to show shipping select menu */}
+      {/*
+      <div className="space-y-4">
         <div className="space-y-3">
           {cartSelectMenus.map((menu) => (
             <CartSelectItem
@@ -49,7 +62,9 @@ const CartSummary = () => {
               onSelect={handleCartSelect}
             />
           ))}
-        </div> */}
+        </div>
+      </div>
+      */}
 
       <div className="space-y-6">
         <div>
@@ -58,7 +73,15 @@ const CartSummary = () => {
               Subtotal
             </p>
             <p className="font-inter text-sm font-medium text-[#141718]">
-              $120.00
+              ${subtotal.toFixed(2)}
+            </p>
+          </div>
+          <div className="flex items-center justify-between border-b border-[#EAEAEA] py-3">
+            <p className="font-inter text-sm font-medium text-[#141718]">
+              Discount
+            </p>
+            <p className="font-inter text-sm font-medium text-[#141718]">
+              ${totalDiscount.toFixed(2)}
             </p>
           </div>
           <div className="flex items-center justify-between py-3">
@@ -66,16 +89,15 @@ const CartSummary = () => {
               Total
             </p>
             <p className="font-poppins text-lg font-semibold text-[#141718]">
-              {total}
+              ${total.toFixed(2)}
             </p>
           </div>
         </div>
 
-        <button className="w-full rounded-lg bg-[#141718] px-6 py-2.5 font-inter text-lg font-medium text-white">
+        <button onClick={() => router.push("/checkout")} className="w-full rounded-lg bg-[#141718] px-6 py-2.5 font-inter text-lg font-medium text-white">
           Checkout
         </button>
       </div>
-      {/*       </div> */}
     </div>
   );
 };
@@ -93,11 +115,10 @@ const CartSelectItem: React.FC<CartSelectItemProps> = ({
 }) => {
   return (
     <div
-      key={data.name}
       onClick={() => onSelect(data.name)}
       className={cn(
         "flex cursor-pointer items-center justify-between rounded border border-[#141718] px-4 py-3",
-        data.name === selectedItem && "bg-[#F3F5F7]",
+        data.name === selectedItem && "bg-[#F3F5F7]"
       )}
     >
       <div className="flex items-center gap-3">
@@ -105,7 +126,7 @@ const CartSelectItem: React.FC<CartSelectItemProps> = ({
           <span
             className={cn(
               "h-2.5 w-2.5 rounded-full",
-              data.name === selectedItem && "bg-[#141718]",
+              data.name === selectedItem && "bg-[#141718]"
             )}
           ></span>
         </span>
@@ -115,9 +136,7 @@ const CartSelectItem: React.FC<CartSelectItemProps> = ({
         </p>
       </div>
 
-      <p className="font-inter text-sm font-medium text-[#141718]">
-        {data.price}
-      </p>
+      <p className="font-inter text-sm font-medium text-[#141718]">{data.price}</p>
     </div>
   );
 };

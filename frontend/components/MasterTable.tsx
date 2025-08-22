@@ -4,7 +4,7 @@ import React from "react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 
 export interface Column<T> {
-    key: keyof T;
+    key: keyof T | string;
     label: string;
     render?: (value: any, row: T) => React.ReactNode;
 };

@@ -9,6 +9,9 @@ import {
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
+import LogoutDialog from "@/components/LogoutDialog";
 
 interface SideBarProps {
     open: boolean;
@@ -17,10 +20,19 @@ interface SideBarProps {
 
 export function SideBar({
     open, setOpen }: SideBarProps) {
+    const [logoutOpen, setLogoutOpen] = useState(false);
+
+
+    const handleLogout = () => {
+        Cookies.remove("userToken");
+        localStorage.removeItem("user");
+        toast.success("Logged out successfully")
+        window.location.href = "/sign-in";
+    };
     const links = [
         {
             label: "Dashboard",
-            href: "",
+            href: "/dashboard",
             icon: (
                 <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
             ),
@@ -40,11 +52,18 @@ export function SideBar({
             ),
         },
         {
+            label: "Orders",
+            href: "/dashboard/orders",
+            icon: (
+                <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+            ),
+        },
+        {
             label: "Logout",
-            href: "",
             icon: (
                 <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
             ),
+            onClick: () => setLogoutOpen(true),
         },
     ];
 
@@ -55,6 +74,11 @@ export function SideBar({
                 "h-screen",
             )}
         >
+            <LogoutDialog
+                isOpen={logoutOpen}
+                onClose={() => setLogoutOpen(false)}
+                onClick={handleLogout}
+            />
             <Sidebar open={open} setOpen={setOpen} animate={true}>
                 <SidebarBody className="w-full justify-between gap-10">
                     <div className="flex w-full flex-1 flex-col overflow-x-hidden overflow-y-auto">

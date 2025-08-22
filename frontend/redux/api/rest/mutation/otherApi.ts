@@ -1,3 +1,8 @@
+import {
+  CreateOrderPayload,
+  CreateOrderResponse,
+  CreatePaymentIntentResponse,
+} from "@/types/product";
 import { baseApi } from "../../restBaseApi";
 
 const otherApi = baseApi.injectEndpoints({
@@ -49,6 +54,30 @@ const otherApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Products"],
     }),
+
+    createPaymentIntent: builder.mutation<CreatePaymentIntentResponse, number>({
+      query: (amount) => ({
+        url: `payments/create-payment-intent`,
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        body: { amount },
+      }),
+    }),
+    createOrder: builder.mutation<CreateOrderResponse, CreateOrderPayload>({
+      query: (orderData) => ({
+        url: "/order",
+        method: "POST",
+        body: orderData,
+      }),
+    }),
+    updateOrder: builder.mutation({
+      query: ({ id, formData }: { id: string; formData: any }) => ({
+        url: `order/${id}`,
+        method: "PUT",
+        body: formData,
+      }),
+      invalidatesTags: ["Orders"],
+    }),
   }),
 });
 
@@ -59,4 +88,7 @@ export const {
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useCreatePaymentIntentMutation,
+  useCreateOrderMutation,
+  useUpdateOrderMutation,
 } = otherApi;
