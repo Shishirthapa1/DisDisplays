@@ -5,6 +5,7 @@ import { Minus, Plus } from "lucide-react";
 interface CartQuantityProps
   extends React.HTMLAttributes<HTMLDivElement> {
   quantity: number;
+  stock?: number;
   onAddQuantity: () => void;
   onMinusQuantity: () => void;
 }
@@ -13,6 +14,7 @@ const CartQuantity: React.FC<CartQuantityProps> = ({
   quantity,
   onAddQuantity,
   onMinusQuantity,
+  stock,
   ...props
 }) => {
   return (

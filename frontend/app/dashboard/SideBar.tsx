@@ -120,7 +120,7 @@ export function SideBar({
 export const Logo = ({ open }: { open: boolean }) => {
     return (
         <a
-            href="#"
+            href=""
             className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
         >
 

@@ -2,7 +2,7 @@
 import { User } from "../models/user.model";
 
 export const seedAdminUser = async () => {
-  const adminEmail = "admin@example.com";
+  const adminEmail = "sisirjangthapa@gmail.com";
 
   const existingAdmin = await User.findOne({ email: adminEmail });
   if (existingAdmin) return;

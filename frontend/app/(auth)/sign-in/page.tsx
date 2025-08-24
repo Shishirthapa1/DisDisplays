@@ -19,12 +19,13 @@ import Cookies from "js-cookie";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useLoginMutation } from "@/redux/api/rest/mutation/authApi";
 import { useDispatch } from "react-redux";
 import { setToken, setUser } from "@/redux/slices/configUser";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 // 1. Define schema
 const loginSchema = z.object({
@@ -46,6 +47,8 @@ export default function Page() {
 
   const [getLogin, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
+
+  const [showPassword, setShowPassword] = useState({ current: false, new: false });
 
   const router = useRouter();
   // 3. Handle form submission
@@ -139,13 +142,19 @@ export default function Page() {
               </div>
 
               {/* Password */}
-              <div className="border-b border-[#E8ECEF] pb-2 focus-within:border-[#141718]">
+              <div className="border-b border-[#E8ECEF] pb-2 focus-within:border-[#141718] relative">
                 <Input
                   intent="secondary"
-                  type="password"
-                  placeholder="Password"
+                  type={showPassword.current ? "text" : "password"} placeholder="Password"
                   {...register("password")}
                 />
+                <button
+                  type="button"
+                  className="absolute right-2 top-2 text-gray-500"
+                  onClick={() => setShowPassword({ ...showPassword, current: !showPassword.current })}
+                >
+                  {showPassword.current ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
                 {errors.password && (
                   <Text size="xs" color="red" className="mt-1">
                     {errors.password.message}

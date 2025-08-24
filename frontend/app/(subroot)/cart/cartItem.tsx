@@ -14,6 +14,7 @@ import CartQuantity from "@/app/(subroot)/cart/cartQuantity";
 import { useDispatch } from "react-redux";
 import { updateQuantity } from "@/redux/slices/cartSlice";
 import CartItemAction from "./cartItemAction";
+import toast from "react-hot-toast";
 
 export type CartItemProps = {
   product: {
@@ -31,6 +32,7 @@ const CartItem: React.FC<CartItemProps> = ({ product }) => {
   const dispatch = useDispatch();
   const quantity = product.quantity;
 
+  const stock = product.stock;
 
   const basePrice = formatCurrency(product.price);
 
@@ -54,7 +56,12 @@ const CartItem: React.FC<CartItemProps> = ({ product }) => {
   };
 
   const handleAddQuantity = () => {
-    dispatch(updateQuantity({ id: product.id, quantity: quantity + 1 }));
+    if (quantity < stock) {
+      dispatch(updateQuantity({ id: product.id, quantity: quantity + 1 }));
+    } else {
+
+      toast.error("Cannot add more, stock limit reached");
+    }
   };
 
   return (
@@ -120,11 +127,10 @@ const CartItem: React.FC<CartItemProps> = ({ product }) => {
 
               <div className="flex items-center justify-between sm:hidden">
                 <CartQuantity
+                  stock={stock}
                   quantity={quantity}
                   onMinusQuantity={handleMinusQuantity}
                   onAddQuantity={handleAddQuantity}
-
-
                 />
 
                 {/* <div
@@ -154,6 +160,7 @@ const CartItem: React.FC<CartItemProps> = ({ product }) => {
       >
         <div className="flex justify-center">
           <CartQuantity
+            stock={stock}
             quantity={quantity}
             onMinusQuantity={handleMinusQuantity}
             onAddQuantity={handleAddQuantity}

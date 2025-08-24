@@ -18,6 +18,8 @@ import { useGetProductByIdQuery } from "@/redux/api/rest/query/queryApi";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/redux/slices/cartSlice";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const ProductDetail = ({ productId }: { productId: string }) => {
 
@@ -26,6 +28,15 @@ const ProductDetail = ({ productId }: { productId: string }) => {
     const product = productData?.product;
 
     const dispatch = useDispatch();
+
+    const cartProducts = useSelector((state: RootState) => state.cart.items);
+    // console.log("Cart Products in Summary:", cartProducts);
+
+    const cartProductIds = cartProducts.map(item => item.id);
+    // console.log('cartProductIds', cartProductIds)
+
+    const isAlreadyInCart = cartProductIds.includes(productId);
+    // console.log('isAlreadyInCart', isAlreadyInCart)
 
     const handleAddToCart = () => {
         dispatch(addToCart({
@@ -38,7 +49,6 @@ const ProductDetail = ({ productId }: { productId: string }) => {
             image: product?.image
         }));
         toast.success("Product added to Cart")
-
     }
 
     if (isLoading) return <div>Loading...</div>;
@@ -101,75 +111,10 @@ const ProductDetail = ({ productId }: { productId: string }) => {
 
                         </div>
 
-                        {/* <div className="space-y-3 border-b border-[#E8ECEF] py-6">
-                            <p className="font-inter text-base font-normal text-[#343839]">
-                                Offer expires in:
-                            </p>
 
-                            <div className="flex gap-4">
-                                <div className="w-fit">
-                                    <div className="flex h-[60px] w-[60px] items-center justify-center bg-[#F3F5F7] font-poppins text-[34px] font-medium text-[#141718]">
-                                        02
-                                    </div>
-                                    <p className="text-center font-inter text-xs font-normal text-[#6C7275]">
-                                        Days
-                                    </p>
-                                </div>
-                                <div className="w-fit">
-                                    <div className="flex h-[60px] w-[60px] items-center justify-center bg-[#F3F5F7] font-poppins text-[34px] font-medium text-[#141718]">
-                                        12
-                                    </div>
-                                    <p className="text-center font-inter text-xs font-normal text-[#6C7275]">
-                                        Hours
-                                    </p>
-                                </div>
-                                <div className="w-fit">
-                                    <div className="flex h-[60px] w-[60px] items-center justify-center bg-[#F3F5F7] font-poppins text-[34px] font-medium text-[#141718]">
-                                        45
-                                    </div>
-                                    <p className="text-center font-inter text-xs font-normal text-[#6C7275]">
-                                        Minutes
-                                    </p>
-                                </div>
-                                <div className="w-fit">
-                                    <div className="flex h-[60px] w-[60px] items-center justify-center bg-[#F3F5F7] font-poppins text-[34px] font-medium text-[#141718]">
-                                        05
-                                    </div>
-                                    <p className="text-center font-inter text-xs font-normal text-[#6C7275]">
-                                        Seconds
-                                    </p>
-                                </div>
-                            </div>
-                        </div> */}
-
-                        {/* <div className="space-y-6 py-6">
-                            <div className="space-y-2">
-                                <p className="font-inter text-base font-semibold text-[#6C7275]">
-                                    Measurements
-                                </p>
-                                <p className="font-inter text-xl font-normal text-[#141718]">
-                                    17 1/2x20 5/8
-                                </p>
-                            </div>
-
-                            <ProductVariant variants={product.variants} />
-                        </div> */}
 
                         <div className="space-y-4 border-b border-[#E8ECEF] py-6 lg:hidden">
                             <div className="flex h-10 gap-2 lg:h-[52px]">
-                                {/* <div className="flex h-full w-1/2 items-center justify-between rounded bg-[#F5F5F5] px-2 md:w-3/5 lg:px-4">
-                                    <MinusIcon
-                                        stroke="#141718"
-                                        className="h-4 w-4 lg:h-5 lg:w-6"
-                                    />
-                                    <span className="font-inter text-sm font-semibold text-[#141718] lg:text-base">
-                                        1
-                                    </span>
-                                    <PlusIcon
-                                        stroke="#141718"
-                                        className="h-4 w-4 lg:h-5 lg:w-6"
-                                    />
-                                </div> */}
 
                                 <Button
                                     variant="ghost"
@@ -194,11 +139,13 @@ const ProductDetail = ({ productId }: { productId: string }) => {
                             >
                                 Add to Cart
                             </Button> */}
+
                             <Button
-                                className="w-full"
+                                className={`w-full ${isAlreadyInCart ? 'bg-gray-400 cursor-not-allowed hover:bg-gray-400' : ''}`}
+                                disabled={isAlreadyInCart}
                                 onClick={handleAddToCart}
                             >
-                                Add to Cart
+                                {isAlreadyInCart ? "Added to cart" : "Add to Cart"}
                             </Button>
                         </div>
 
@@ -258,10 +205,11 @@ const ProductDetail = ({ productId }: { productId: string }) => {
                                 </span>
                             </Button>
                             <Button
-                                className="w-full"
+                                className={`w-full ${isAlreadyInCart ? 'bg-gray-400 cursor-not-allowed hover:bg-gray-400' : ''}`}
+                                disabled={isAlreadyInCart}
                                 onClick={handleAddToCart}
                             >
-                                Add to Cart
+                                {isAlreadyInCart ? "Added to cart" : "Add to Cart"}
                             </Button>
                         </div>
                     </div>

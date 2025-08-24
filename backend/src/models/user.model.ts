@@ -1,12 +1,25 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const userSchema = new mongoose.Schema(
+interface IUser extends Document {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  status: "pending" | "verified";
+  otp: string | null; // allow null
+  otpExpiry: Date | null; // allow null
+}
+
+const userSchema = new mongoose.Schema<IUser>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, required: true, default: "admin" },
+    status: { type: String, enum: ["pending", "verified"], default: "pending" },
+    otp: { type: String, default: null },
+    otpExpiry: { type: Date, default: null },
   },
   { timestamps: true }
 );

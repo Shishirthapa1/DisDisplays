@@ -1,7 +1,13 @@
 "use client";
 
+import ChangePasswordDialog from '@/components/ChangePasswordDialog';
+import { VerifyOtpDialog } from '@/components/VerifyOtpDialog';
+import { useSendEmailMutation } from '@/redux/api/rest/mutation/authApi';
 import { useGetUserByIdQuery } from '@/redux/api/rest/query/queryApi';
 import React, { useState, useEffect } from 'react'
+import toast from 'react-hot-toast';
+
+let lastSentTime: number | null = null;
 
 const page = () => {
     const [userId, setUserId] = useState<string | null>(null);
@@ -17,13 +23,31 @@ const page = () => {
         { id: userId as string },
         { skip: !userId }
     );
+    const [verifyDialog, setVerifyDialog] = useState(false);
+    const [chnagePassDialog, setChangePassDialog] = useState(false);
 
-    const [password, setPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
+    const [getSendEmail] = useSendEmailMutation();
 
-    const handlePasswordChange = () => {
-        // Implement your change password logic here
-        console.log("Old:", password, "New:", newPassword);
+    const handleVerifyNow = async () => {
+        const now = Date.now();
+        setVerifyDialog(true);
+
+        if (lastSentTime && now - lastSentTime < 60000) {
+            toast.error("You can request a new OTP after 1 minute.");
+            return;
+        }
+
+        console.log("Verify email for:", userData?.email);
+        try {
+            const res = await getSendEmail({ email: userData?.email }).unwrap();
+            console.log('resss', res);
+            lastSentTime = now;
+
+            toast.success("Verification email sent! Please check your inbox.");
+        } catch (err: any) {
+            console.log(err);
+            toast.error(err?.data?.message || "Failed to send verification email. Please try again.");
+        }
     };
 
     if (isUserLoading) return <p>Loading user data...</p>;
@@ -54,40 +78,33 @@ const page = () => {
                             ✅ Verified
                         </span>
                     ) : (
-                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium text-sm flex items-center gap-1">
-                            ❌ Not Verified
-                        </span>
+                        <div className="flex items-center gap-3">
+                            <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium text-sm flex items-center gap-1">
+                                ❌ Not Verified
+                            </span>
+                            <button
+                                onClick={handleVerifyNow}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-lg text-sm font-medium"
+                            >
+                                Verify Now
+                            </button>
+                        </div>
                     )}
                 </div>
 
-                {/* Change Password Section */}
-                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                    <h2 className="text-xl font-semibold mb-4 text-gray-800">Change Password</h2>
-                    <div className="space-y-3">
-                        <input
-                            type="password"
-                            placeholder="Current Password"
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <input
-                            type="password"
-                            placeholder="New Password"
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                        />
-                        <button
-                            onClick={handlePasswordChange}
-                            className="w-full px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
-                        >
-                            Update Password
-                        </button>
-                    </div>
-                </div>
+                <button onClick={() => setChangePassDialog(true)}>Change Password</button>
 
             </div>
+            <ChangePasswordDialog
+                isOpen={chnagePassDialog}
+                email={userData?.email || ""}
+                onClose={() => setChangePassDialog(false)}
+            />
+            <VerifyOtpDialog
+                email={userData?.email || ""}
+                onClose={() => setVerifyDialog(false)}
+                open={verifyDialog}
+            />
         </div>
 
     );

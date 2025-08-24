@@ -50,6 +50,8 @@ export default function Page() {
 
   const [submitOrder, setSubmitOrder] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
 
   const shippingAddressSchema = z.object({
     addressLine: z.string().min(1, "Address Line is required"),
@@ -60,11 +62,14 @@ export default function Page() {
     country: z.string().min(1, "Country is required"),
   });
 
-  // Full Order Schema including user info (example)
-  const orderSchema = z.object({
+  const userSchema = z.object({
     fullname: z.string().min(1, "Full name is required"),
     email: z.string().email("Invalid email address"),
     phoneNumber: z.string().min(1, "Phone number is required"),
+  });
+
+  const orderSchema = z.object({
+    user: userSchema,
     shippingAddress: shippingAddressSchema,
     products: z
       .array(
@@ -94,16 +99,23 @@ export default function Page() {
     products: orderData,
     totalAmount: total,
   });
+
   const handleOrderAfterPayment = async () => {
-    // const validation = orderSchema.safeParse(formData);
+    const validation = orderSchema.safeParse(formData);
 
-    // if (!validation.success) {
-    //   const firstError = validation.error.issues[0];
-    //   console.log("Validation errors:", validation.error.format());
+    if (!validation.success) {
+      const fieldErrors: Record<string, string> = {};
+      validation.error.issues.forEach((issue) => {
+        const path = issue.path.join(".");
+        fieldErrors[path] = issue.message;
+      });
 
-    //   toast.error(firstError.message);
-    //   return;
-    // }
+      setErrors(fieldErrors);
+      toast.error("Please fix the highlighted errors");
+      return;
+    }
+    setErrors({});
+
     try {
       const res = await createOrder(formData).unwrap();
       toast.success("Order created successfully!");
@@ -180,8 +192,14 @@ export default function Page() {
                       user: { ...prev.user, fullname: e.target.value },
                     }))
                   }
-                  className="w-full rounded-md border border-[#6C7275] px-3 py-2 text-sm text-[#141718] focus:outline-none focus:ring-1 focus:ring-[#141718]"
+                  className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 ${errors["user.fullname"]
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-[#6C7275] focus:ring-[#141718]"
+                    }`}
                 />
+                {errors["user.fullname"] && (
+                  <p className="text-red-500 text-sm mt-1">{errors["user.fullname"]}</p>
+                )}
               </div>
 
               {/* Phone Number */}
@@ -197,7 +215,10 @@ export default function Page() {
                       user: { ...prev.user, phoneNumber: e.target.value },
                     }))
                   }
-                  className="w-full rounded-md border border-[#6C7275] px-3 py-2 text-sm text-[#141718] focus:outline-none focus:ring-1 focus:ring-[#141718]"
+                  className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 ${errors["user.fullname"]
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-[#6C7275] focus:ring-[#141718]"
+                    }`}
                 />
               </div>
 
@@ -214,7 +235,10 @@ export default function Page() {
                       user: { ...prev.user, email: e.target.value },
                     }))
                   }
-                  className="w-full rounded-md border border-[#6C7275] px-3 py-2 text-sm text-[#141718] focus:outline-none focus:ring-1 focus:ring-[#141718]"
+                  className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 ${errors["user.fullname"]
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-[#6C7275] focus:ring-[#141718]"
+                    }`}
                 />
               </div>
 
@@ -240,7 +264,10 @@ export default function Page() {
                           shippingAddress: { ...prev.shippingAddress, addressLine: e.target.value },
                         }))
                       }
-                      className="w-full rounded-md border border-[#6C7275] px-3 py-2 text-sm text-[#141718] focus:outline-none focus:ring-1 focus:ring-[#141718]"
+                      className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 ${errors["user.fullname"]
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-[#6C7275] focus:ring-[#141718]"
+                        }`}
                     />
                   </div>
                   {/* Street */}
@@ -256,7 +283,10 @@ export default function Page() {
                           shippingAddress: { ...prev.shippingAddress, street: e.target.value },
                         }))
                       }
-                      className="w-full rounded-md border border-[#6C7275] px-3 py-2 text-sm text-[#141718] focus:outline-none focus:ring-1 focus:ring-[#141718]"
+                      className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 ${errors["user.fullname"]
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-[#6C7275] focus:ring-[#141718]"
+                        }`}
                     />
                   </div>
 
@@ -273,7 +303,10 @@ export default function Page() {
                           shippingAddress: { ...prev.shippingAddress, city: e.target.value },
                         }))
                       }
-                      className="w-full rounded-md border border-[#6C7275] px-3 py-2 text-sm text-[#141718] focus:outline-none focus:ring-1 focus:ring-[#141718]"
+                      className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 ${errors["user.fullname"]
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-[#6C7275] focus:ring-[#141718]"
+                        }`}
                     />
                   </div>
 
@@ -290,7 +323,10 @@ export default function Page() {
                           shippingAddress: { ...prev.shippingAddress, state: e.target.value },
                         }))
                       }
-                      className="w-full rounded-md border border-[#6C7275] px-3 py-2 text-sm text-[#141718] focus:outline-none focus:ring-1 focus:ring-[#141718]"
+                      className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 ${errors["user.fullname"]
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-[#6C7275] focus:ring-[#141718]"
+                        }`}
                     />
                   </div>
 
@@ -307,7 +343,10 @@ export default function Page() {
                           shippingAddress: { ...prev.shippingAddress, postalCode: e.target.value },
                         }))
                       }
-                      className="w-full rounded-md border border-[#6C7275] px-3 py-2 text-sm text-[#141718] focus:outline-none focus:ring-1 focus:ring-[#141718]"
+                      className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 ${errors["user.fullname"]
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-[#6C7275] focus:ring-[#141718]"
+                        }`}
                     />
                   </div>
 
@@ -324,7 +363,10 @@ export default function Page() {
                           shippingAddress: { ...prev.shippingAddress, country: e.target.value },
                         }))
                       }
-                      className="w-full rounded-md border border-[#6C7275] px-3 py-2 text-sm text-[#141718] focus:outline-none focus:ring-1 focus:ring-[#141718]"
+                      className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 ${errors["user.fullname"]
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-[#6C7275] focus:ring-[#141718]"
+                        }`}
                     />
                   </div>
                 </div>
