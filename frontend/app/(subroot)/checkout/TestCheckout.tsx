@@ -13,9 +13,10 @@ interface CheckoutFormProps {
     onPaymentSuccess?: () => void;
     submit?: boolean;
     setLoading: (loading: boolean) => void;
+    onPaymentComplete?: () => void;
 }
 
-const CheckoutForm: React.FC<CheckoutFormProps> = ({ onPaymentSuccess, submit, setLoading }) => {
+const CheckoutForm: React.FC<CheckoutFormProps> = ({ onPaymentSuccess, submit, setLoading, onPaymentComplete }) => {
     const stripe = useStripe();
     const elements = useElements();
     const total: number = useSelector((state: RootState) => selectTotal(state));
@@ -34,7 +35,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onPaymentSuccess, submit, s
 
             if (error || !data?.clientSecret) {
                 setLoading(false);
-                toast.error("Payment Failed")
+                toast.error("Payment Failed");
+                onPaymentComplete?.();
                 return;
             }
 
@@ -46,6 +48,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onPaymentSuccess, submit, s
 
             if (result.error) {
                 toast.error(result.error.message || "Payment Failed");
+                onPaymentComplete?.();
 
             } else if (result.paymentIntent?.status === "succeeded") {
                 toast.success("Payment Successful!");
@@ -53,6 +56,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onPaymentSuccess, submit, s
             }
         } catch (err) {
             toast.error("Something went wrong.");
+            onPaymentComplete?.();
 
         } finally {
             setLoading(false);

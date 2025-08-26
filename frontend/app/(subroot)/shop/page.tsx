@@ -1,4 +1,5 @@
 // packages
+"use client";
 import { ChevronDown } from "lucide-react";
 
 // layouts
@@ -22,7 +23,9 @@ import {
 // lib
 import { cn } from "@/lib/utils";
 import CatalogToggle from "@/app/(subroot)/shop/catalogToggle";
-import CatalogProduct from "@/app/(subroot)/shop/catalogProduct";
+import CatalogProduct from "./catalogProduct";
+import { useSearchParams } from "next/navigation";
+// import CatalogProduct from "@/app/(subroot)/shop/catalogProduct";
 
 const categories = [
   {
@@ -118,6 +121,12 @@ const sorts = [
 ];
 
 export default function Page() {
+  const searchParams = useSearchParams();
+  const categoryName = searchParams.get("category"); // "Earphones"
+  const categoryId = searchParams.get("id");
+
+  console.log("Category Name:", categoryName);
+  console.log("Category ID:", categoryId);
   return (
     <SectionLayout>
       <div className="px-8">
@@ -127,19 +136,19 @@ export default function Page() {
               size="sm"
               color="gray"
               weight={500}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 lg:text-sm md:text-[13px] text-xs"
             >
               Home{" "}
               <DropdownIcon stroke="#6C7275" className="h-3 w-3 -rotate-90" />
             </Text>
-            <Text size="sm" weight={500}>
+            <Text size="sm" weight={500} className="lg:text-sm md:text-[13px] text-xs">
               Shop
             </Text>
           </div>
-          <Heading as="h1" intent="shop-page">
+          <Heading as="h1" intent="shop-page" className="lg:text-5xl md:text-4xl sm:text-3xl text-2xl">
             Shop Page
           </Heading>
-          <Text className="lg:text-lg">
+          <Text className="lg:text-lg md:text-base sm:text-sm text-xs">
             Buy Premium Car Accessories and Displays.
           </Text>
         </div>
@@ -148,7 +157,7 @@ export default function Page() {
           {/* filter select menu */}
           <div className="flex flex-col gap-6 md:flex-row lg:col-span-1 lg:items-center lg:gap-4">
             {/* categories */}
-            <div className="w-full space-y-2">
+            {/* <div className="w-full space-y-2">
               <Text size="sm" weight={600} color="gray" transform="uppercase">
                 categories
               </Text>
@@ -196,9 +205,9 @@ export default function Page() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
             {/* price */}
-            <div className="w-full space-y-2">
+            {/* <div className="w-full space-y-2">
               <Text size="sm" weight={600} color="gray" transform="uppercase">
                 price
               </Text>
@@ -246,6 +255,14 @@ export default function Page() {
                   ))}
                 </SelectContent>
               </Select>
+            </div> */}
+            <div className="gap-2 flex items-center">
+              <Text size="base" weight={600} color="black/900" transform="uppercase" className="lg:text-base md:text-sm text-xs">
+                Category Name:
+              </Text>
+              <Text size="sm" weight={600} color="gray" transform="uppercase" classID="pt-4" className="lg:text-sm md:text-xs text-[10px]">
+                {categoryName ? categoryName : "All Products"}
+              </Text>
             </div>
           </div>
 
@@ -302,7 +319,7 @@ export default function Page() {
           </div>
         </div>
 
-        <CatalogProduct />
+        <CatalogProduct categoryId={categoryId} />
       </div>
     </SectionLayout>
   );

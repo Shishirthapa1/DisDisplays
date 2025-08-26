@@ -61,6 +61,9 @@ export default function CatalogSlider() {
 
   const products = data?.products || [];
 
+  // const productIds = products.filter((product: any) => product?._id);
+  // console.log('productIds', productIds);
+
   const newProducts = products.filter((product: any) => product?.productType === "new-arrival");
 
   if (isLoading) {
@@ -100,7 +103,7 @@ export default function CatalogSlider() {
             <ProductCard.Root data={product}>
               <ProductCard.Thumbnail>
                 <ProductCard.ThumbnailBadge>
-                  <ProductCard.Badge>new</ProductCard.Badge>
+                  <ProductCard.Badge>{product?.productType}</ProductCard.Badge>
                   <ProductCard.WishlistButton />
                 </ProductCard.ThumbnailBadge>
 

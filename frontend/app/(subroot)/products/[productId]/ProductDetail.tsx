@@ -23,9 +23,12 @@ import { RootState } from "@/redux/store";
 
 const ProductDetail = ({ productId }: { productId: string }) => {
 
+    console.log('productId', productId);
+
     const { data: productData, isLoading, isError } = useGetProductByIdQuery({ productId });
 
     const product = productData?.product;
+    console.log('product', product)
 
     const dispatch = useDispatch();
 

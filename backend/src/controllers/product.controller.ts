@@ -63,11 +63,42 @@ export const getAllProducts = async (_req: Request, res: Response) => {
   }
 };
 
+export const getProductsByCategory = async (req: Request, res: Response) => {
+  const { categoryId } = req.params; // assuming categoryId comes in URL params
+
+  if (!categoryId) {
+    return res.status(400).json({
+      success: false,
+      statusCode: 400,
+      message: "Category ID is required",
+    });
+  }
+
+  try {
+    const products = await Product.find({ category: categoryId })
+      .populate("category") // populate category details
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      products,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      statusCode: 500,
+      message: "Failed to fetch products",
+      error,
+    });
+  }
+};
+
 // Get Single Product by ID
 export const getProductById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const product = await Product.findById(id).populate("category");
+    const { productId } = req.params;
+    const product = await Product.findById(productId).populate("category");
 
     if (!product) {
       return res.status(404).json({

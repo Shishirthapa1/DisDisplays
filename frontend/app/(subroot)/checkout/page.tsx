@@ -100,21 +100,27 @@ export default function Page() {
     totalAmount: total,
   });
 
-  const handleOrderAfterPayment = async () => {
+  const validateForm = () => {
     const validation = orderSchema.safeParse(formData);
-
     if (!validation.success) {
       const fieldErrors: Record<string, string> = {};
       validation.error.issues.forEach((issue) => {
         const path = issue.path.join(".");
         fieldErrors[path] = issue.message;
       });
-
       setErrors(fieldErrors);
       toast.error("Please fix the highlighted errors");
-      return;
+      return false;
     }
     setErrors({});
+    return true;
+  };
+
+  const resetSubmitState = () => {
+    setSubmitOrder(false);
+  }
+
+  const handleOrderAfterPayment = async () => {
 
     try {
       const res = await createOrder(formData).unwrap();
@@ -123,19 +129,14 @@ export default function Page() {
       dispatch(clearCart());
       router.push("/order-complete/" + res?.order?._id);
     } catch (err: any) {
-      if (err?.data?.message) {
-        toast.error(err.data.message);
-      } else if (err?.message) {
-        toast.error(err.message);
-      } else {
-        toast.error("Failed to create order.");
-      }
+      toast.error(err?.data?.message || err?.message || "Failed to create order.");
       console.error("Order creation error:", err);
     }
 
   };
 
   const handlePlaceOrder = () => {
+    if (!validateForm()) return;
     setSubmitOrder(true);
   }
   return (
@@ -423,8 +424,10 @@ export default function Page() {
               </div>
             </div>
             <Elements stripe={stripePromise}>
-              <CheckoutForm onPaymentSuccess={handleOrderAfterPayment} submit={submitOrder}
-                setLoading={setLoading} />
+              <CheckoutForm
+                onPaymentSuccess={handleOrderAfterPayment} submit={submitOrder}
+                setLoading={setLoading}
+                onPaymentComplete={resetSubmitState} />
             </Elements>
           </div>
 

@@ -75,7 +75,7 @@ const ThumbnailBadge: React.FC<React.PropsWithChildren> = ({ children }) => {
 type BadgeVariants = VariantProps<typeof badgeVariants>;
 
 const badgeVariants = cva(
-  "w-fit rounded px-3.5 py-1 font-inter text-base font-bold uppercase",
+  "w-fit rounded px-3.5 py-1 font-inter lg:text-sm md:text-xs text-[10px] font-bold uppercase",
   {
     variants: {
       intent: {
@@ -203,7 +203,7 @@ const Name: React.FC<NameProps> = ({ className, ...props }) => {
     <Text
       weight={600}
       color="black/800"
-      className={cn("line-clamp-1", className)}
+      className={cn("line-clamp-1 lg:text-base md:text-sm text-xs", className)}
       {...props}
     >
       {name}
@@ -222,14 +222,14 @@ const Price: React.FC<PriceProps> = ({ className, ...props }) => {
         size="sm"
         weight={600}
         color="black/800"
-        className="line-clamp-1"
+        className="line-clamp-1 lg:text-sm text-xs text-[10px]"
         {...props}
       >
         {formatCurrency(price)}
       </Text>
 
       {typeof discount === 'number' && discount > 0 && (
-        <Text size="xs" weight={500} color="red" className="uppercase">
+        <Text size="xs" weight={500} color="red" className="uppercase lg:text-xs md:text-[10px] text-[8px]">
           {discount}% off
         </Text>
       )}
@@ -249,7 +249,7 @@ const Description: React.FC<DescriptionProps> = ({ className, ...props }) => {
       size="xs"
       weight={400}
       color="gray"
-      className={cn("overflow-hidden line-clamp-3", className)}
+      className={cn("overflow-hidden lg:text-xs md:text-[10px] text-[8px] line-clamp-3", className)}
       {...props}
     >
       {description}

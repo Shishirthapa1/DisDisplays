@@ -5,6 +5,7 @@ import {
   getProductById,
   updateProduct,
   deleteProduct,
+  getProductsByCategory,
 } from "../controllers/product.controller";
 import { protect, adminOnly } from "../middlewares/auth.middleware";
 
@@ -12,7 +13,8 @@ const router = express.Router();
 
 // Public routes
 router.get("/", getAllProducts);
-router.get("/:id", getProductById);
+router.get("/category/:categoryId", getProductsByCategory);
+router.get("/:productId", getProductById);
 
 // Protected (admin only)
 router.post("/", protect, adminOnly, createProduct);

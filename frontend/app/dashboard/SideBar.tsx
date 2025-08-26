@@ -2,16 +2,19 @@
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink, SidebarToggleButton } from "../../components/ui/sidebar";
 import {
-    IconArrowLeft,
+    IconBox,
     IconBrandTabler,
-    IconSettings,
-    IconUserBolt,
+    IconLayoutDashboard,
+    IconLogout,
+    IconShoppingCart,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import LogoutDialog from "@/components/LogoutDialog";
+import { useRouter } from "next/navigation";
+import { set } from "zod";
 
 interface SideBarProps {
     open: boolean;
@@ -22,46 +25,47 @@ export function SideBar({
     open, setOpen }: SideBarProps) {
     const [logoutOpen, setLogoutOpen] = useState(false);
 
+    const router = useRouter();
 
     const handleLogout = () => {
         Cookies.remove("userToken");
         localStorage.removeItem("user");
         toast.success("Logged out successfully")
-        window.location.href = "/sign-in";
+        router.push("/sign-in");
     };
     const links = [
         {
             label: "Dashboard",
             href: "/dashboard",
             icon: (
-                <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+                <IconLayoutDashboard className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
             ),
         },
         {
             label: "Category",
             href: "/dashboard/category",
             icon: (
-                <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+                <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
             ),
         },
         {
             label: "Products",
             href: "/dashboard/products",
             icon: (
-                <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+                <IconBox className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
             ),
         },
         {
             label: "Orders",
             href: "/dashboard/orders",
             icon: (
-                <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+                <IconShoppingCart className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
             ),
         },
         {
             label: "Logout",
             icon: (
-                <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+                <IconLogout className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
             ),
             onClick: () => setLogoutOpen(true),
         },
@@ -70,8 +74,7 @@ export function SideBar({
     return (
         <div
             className={cn(
-                "flex w-full flex-1 flex-col overflow-hidden rounded-md bg-gray-100 md:flex-row",
-                "h-screen",
+                "flex w-full flex-1 flex-col overflow-hidden rounded-md bg-gray-100 md:flex-row md:h-screen",
             )}
         >
             <LogoutDialog
@@ -80,12 +83,16 @@ export function SideBar({
                 onClick={handleLogout}
             />
             <Sidebar open={open} setOpen={setOpen} animate={true}>
-                <SidebarBody className="w-full justify-between gap-10">
-                    <div className="flex w-full flex-1 flex-col overflow-x-hidden overflow-y-auto">
+                <SidebarBody className="justify-between gap-10">
+                    <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
                         {/* Logo and Toggle Button Container */}
                         <div className="flex items-center w-full justify-between mb-4">
-                            <Logo open={open} />
-                            <SidebarToggleButton />
+                            <Logo open={open} setOpen={setOpen} />
+                            <div className="md:flex hidden">
+                                {/* <SidebarToggleButton /> */}
+                            </div>
+
+
                         </div>
 
                         <div className="mt-8 flex flex-col gap-2">
@@ -94,47 +101,33 @@ export function SideBar({
                             ))}
                         </div>
                     </div>
-                    {/* <div>
-                        <SidebarLink
-                            link={{
-                                label: "Manu Arora",
-                                href: "#",
-                                icon: (
-                                    <img
-                                        src="https://assets.aceternity.com/manu.png"
-                                        className="h-7 w-7 shrink-0 rounded-full"
-                                        width={50}
-                                        height={50}
-                                        alt="Avatar"
-                                    />
-                                ),
-                            }}
-                        />
-                    </div> */}
                 </SidebarBody>
             </Sidebar>
         </div>
     );
 }
 
-export const Logo = ({ open }: { open: boolean }) => {
-    return (
-        <a
-            href=""
-            className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
-        >
+export const Logo = ({ open, setOpen }: {
+    open: boolean,
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 
+}) => {
+    return (
+        <div
+            className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal cursor-pointer text-black"
+            onClick={() => setOpen(!open)}
+        >
             <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-black dark:bg-white" />
             {open && (
                 <motion.span
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="font-medium whitespace-pre text-black dark:text-white"
+                    className="font-medium whitespace-pre text-black dark:text-white lg:text-base md:text-sm text-sm"
                 >
                     Dis Displays
                 </motion.span>
             )}
 
-        </a>
+        </div>
     );
 };

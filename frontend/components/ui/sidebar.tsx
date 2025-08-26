@@ -88,7 +88,7 @@ export const SidebarToggleButton = ({
         <button
             onClick={() => setOpen(!open)}
             className={cn(
-                "p-2 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-200 text-neutral-700 dark:text-neutral-200",
+                "p-2 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-200 text-neutral-700 dark:text-neutral-200 md:flex hidden",
                 className
             )}
             {...props}
@@ -108,7 +108,7 @@ export const DesktopSidebar = ({
         <>
             <motion.div
                 className={cn(
-                    `h-full w-full ${open ? "px-4" : "px-2"} py-4 hidden md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 shrink-0 `,
+                    `h-full ${open ? "px-4" : "px-2"} py-4 hidden md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[300px] shrink-0 `,
                     className
                 )}
                 // animate={{
@@ -138,7 +138,7 @@ export const MobileSidebar = ({
             >
                 <div className="flex justify-end z-20 w-full">
                     <IconMenu2
-                        className="text-neutral-800 dark:text-neutral-200 cursor-pointer"
+                        className="text-neutral-800 dark:text-neutral-200"
                         onClick={() => setOpen(!open)}
                     />
                 </div>
@@ -158,7 +158,7 @@ export const MobileSidebar = ({
                             )}
                         >
                             <div
-                                className="absolute right-10 top-10 z-50 text-neutral-800 dark:text-neutral-200 cursor-pointer"
+                                className="absolute right-10 top-10 z-50 text-neutral-800 dark:text-neutral-200"
                                 onClick={() => setOpen(!open)}
                             >
                                 <IconX />
@@ -186,7 +186,7 @@ export const SidebarLink = ({
             onClick={link.onClick}
             href={link.href}
             className={cn(
-                `flex items-center justify-start gap-2 group/sidebar py-2`,
+                `flex items-center justify-start gap-2 group/sidebar py-2 cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-md px-3`,
                 className
             )}
             {...props}

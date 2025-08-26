@@ -93,10 +93,12 @@ const ChangePasswordDialog: React.FC<ChangePasswordDialogProps> = ({
 
                 <form onSubmit={handleSubmit} className="space-y-3">
                     {/* Current Password */}
-                    <div className="relative">
+                    {/* Current Password */}
+                    <div className="relative flex flex-col">
+                        <label className="mb-1 text-sm font-medium text-[#141718]">Current Password</label>
                         <input
                             type={showPassword.current ? "text" : "password"}
-                            placeholder="Current Password"
+                            placeholder="Enter your current password"
                             className="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
@@ -104,8 +106,10 @@ const ChangePasswordDialog: React.FC<ChangePasswordDialogProps> = ({
                         />
                         <button
                             type="button"
-                            className="absolute right-2 top-2 text-gray-500"
-                            onClick={() => setShowPassword({ ...showPassword, current: !showPassword.current })}
+                            className="absolute right-2 top-9 text-gray-500" // moved down to align with input
+                            onClick={() =>
+                                setShowPassword({ ...showPassword, current: !showPassword.current })
+                            }
                         >
                             {showPassword.current ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
@@ -115,10 +119,11 @@ const ChangePasswordDialog: React.FC<ChangePasswordDialogProps> = ({
                     </div>
 
                     {/* New Password */}
-                    <div className="relative">
+                    <div className="relative flex flex-col mt-4">
+                        <label className="mb-1 text-sm font-medium text-[#141718]">New Password</label>
                         <input
                             type={showPassword.new ? "text" : "password"}
-                            placeholder="New Password"
+                            placeholder="Enter a new password"
                             className="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
@@ -126,7 +131,7 @@ const ChangePasswordDialog: React.FC<ChangePasswordDialogProps> = ({
                         />
                         <button
                             type="button"
-                            className="absolute right-2 top-2 text-gray-500"
+                            className="absolute right-2 top-9 text-gray-500"
                             onClick={() => setShowPassword({ ...showPassword, new: !showPassword.new })}
                         >
                             {showPassword.new ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -135,6 +140,7 @@ const ChangePasswordDialog: React.FC<ChangePasswordDialogProps> = ({
                             <p className="text-red-500 text-sm mt-1">{errors.newPassword}</p>
                         )}
                     </div>
+
 
                     <button
                         type="submit"
