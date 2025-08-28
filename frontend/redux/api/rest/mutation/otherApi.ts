@@ -78,6 +78,22 @@ const otherApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Orders"],
     }),
+    updateShipping: builder.mutation({
+      query: ({
+        id,
+        cost,
+        estimatedDays,
+      }: {
+        id: string;
+        cost: number;
+        estimatedDays: number;
+      }) => ({
+        url: `shipping/${id}`,
+        method: "PUT",
+        body: { cost, estimatedDays },
+      }),
+      invalidatesTags: ["ShippingInfo"],
+    }),
   }),
 });
 
@@ -91,4 +107,5 @@ export const {
   useCreatePaymentIntentMutation,
   useCreateOrderMutation,
   useUpdateOrderMutation,
+  useUpdateShippingMutation,
 } = otherApi;

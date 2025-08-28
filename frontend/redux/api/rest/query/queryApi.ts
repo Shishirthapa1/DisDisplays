@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { get } from "http";
 import { baseApi } from "../../restBaseApi";
 
 const queryApi = baseApi.injectEndpoints({
@@ -66,6 +67,14 @@ const queryApi = baseApi.injectEndpoints({
       }),
       providesTags: ["UserById"],
     }),
+
+    getShippinginfo: builder.query<any, void>({
+      query: () => ({
+        url: "shipping",
+        method: "GET",
+      }),
+      providesTags: ["ShippingInfo"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -79,4 +88,5 @@ export const {
   useGetOrderByIdQuery,
   useGetUserByIdQuery,
   useGetProductsByCategoryQuery,
+  useGetShippinginfoQuery,
 } = queryApi;

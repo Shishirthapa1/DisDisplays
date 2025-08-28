@@ -133,7 +133,7 @@ export default function Home() {
                   <Heading as="h3" intent="collection-card">
                     {category.name}
                   </Heading>
-                  <Link href={`/shop?category=${category._id}`} className="w-fit">
+                  <Link href={`/shop?category=${encodeURIComponent(category?.name)}&id=${category?._id}`} className="w-fit">
                     <span className="flex w-fit items-center gap-1 border-b border-[#121212]">
                       Collection <ArrowRightIcon stroke="#121212" className="h-4 w-4" />
                     </span>
@@ -142,7 +142,12 @@ export default function Home() {
               </div>
             ))}
           </div>
-
+          <div className="flex w-full items-center justify-end">
+            <Link href="/shop" className="flex w-fit items-center gap-1 border-b border-[#121212] lg:text-xl md:text-lg text-base">
+              Explore All
+              <ArrowRightIcon stroke="#121212" className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </SectionLayout>
 

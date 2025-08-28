@@ -1,9 +1,10 @@
 "use client";
 
 import ChangePasswordDialog from '@/components/ChangePasswordDialog';
+import ShippingDialog from '@/components/ShippingDialog';
 import { VerifyOtpDialog } from '@/components/VerifyOtpDialog';
 import { useSendEmailMutation } from '@/redux/api/rest/mutation/authApi';
-import { useGetUserByIdQuery } from '@/redux/api/rest/query/queryApi';
+import { useGetShippinginfoQuery, useGetUserByIdQuery } from '@/redux/api/rest/query/queryApi';
 import React, { useState, useEffect } from 'react'
 import toast from 'react-hot-toast';
 
@@ -23,8 +24,18 @@ const page = () => {
         { id: userId as string },
         { skip: !userId }
     );
+
+    const { data: shippingData, isLoading: isShipping } = useGetShippinginfoQuery();
+
+    const shipping = shippingData?.shippings?.[0] || null;
+    console.log('shipping', shipping);
+
+    const shippingId = shipping?._id || null;
+
     const [verifyDialog, setVerifyDialog] = useState(false);
     const [chnagePassDialog, setChangePassDialog] = useState(false);
+    const [shippingDialog, setShippingDialog] = useState(false);
+
 
     const [getSendEmail] = useSendEmailMutation();
 
@@ -96,23 +107,24 @@ const page = () => {
                 <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 flex items-center justify-between">
                     <div>
                         <h2 className="text-xl font-semibold text-gray-800">Shipping Details</h2>
-                        <p className="text-gray-600 mt-1">Cost: <span className="font-medium text-gray-900">$12.00</span></p>
+                        <p className="text-gray-600 mt-1">Cost: <span className="font-medium text-gray-900">{shipping?.cost} $(AUD)</span></p>
+                        <p className="text-gray-600 mt-1">Estimated Delivery Time: <span className="font-medium text-gray-900">{shipping?.estimatedDays} days</span></p>
                     </div>
                     <button
-                        onClick={() => console.log("Change shipping clicked")}
-                        className="px-4 py-2 rounded-xl bg-slate-700 text-white font-medium shadow-md 
-               hover:bg-slate-800 transition-colors duration-200 focus:outline-none 
-               focus:ring-2 focus:ring-slate-400 focus:ring-offset-1"
+                        onClick={() => setShippingDialog(true)}
+                        className="px-4 py-2 rounded-xl bg-amber-500 text-white font-medium shadow-md
+             hover:bg-amber-600 transition-colors duration-200 focus:outline-none
+             focus:ring-0"
                     >
                         Change
                     </button>
+
                 </div>
 
                 <button
                     onClick={() => setChangePassDialog(true)}
                     className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-medium shadow-md 
-             hover:bg-emerald-700 transition-colors duration-200 focus:outline-none 
-             focus:ring-2 focus:ring-emerald-400 focus:ring-offset-1"
+             hover:bg-emerald-700 transition-colors duration-200"
                 >
                     Change Password
                 </button>
@@ -128,6 +140,11 @@ const page = () => {
                 email={userData?.email || ""}
                 onClose={() => setVerifyDialog(false)}
                 open={verifyDialog}
+            />
+            <ShippingDialog
+                isOpen={shippingDialog}
+                onClose={() => setShippingDialog(false)}
+                shippingId={shippingId}
             />
         </div>
 

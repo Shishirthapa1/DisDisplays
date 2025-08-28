@@ -21,6 +21,7 @@ import { useState } from "react";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
+import { useGetShippinginfoQuery } from "@/redux/api/rest/query/queryApi";
 
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
@@ -40,6 +41,14 @@ export default function Page() {
   const [createOrder] = useCreateOrderMutation();
   const cartProducts = useSelector((state: RootState) => state.cart.items);
   console.log("Cart Products:", cartProducts);
+
+  const { data: shippingData, isLoading: isShipping } = useGetShippinginfoQuery();
+
+  const shipping = shippingData?.shippings?.[0] || null;
+  const shippingCost = shipping?.cost || 0;
+  console.log('shipping', shipping);
+
+  const totalAfterShipping = total + shippingCost;
 
   const orderData =
     cartProducts.map(item => ({
@@ -97,7 +106,7 @@ export default function Page() {
       country: "",
     },
     products: orderData,
-    totalAmount: total,
+    totalAmount: totalAfterShipping,
   });
 
   const validateForm = () => {
@@ -395,7 +404,7 @@ export default function Page() {
                   Shipping
                 </p>
                 <p className="font-inter text-sm font-semibold text-[#141718]">
-                  Free
+                  {shippingCost === 0 ? "Free" : `$${shippingCost}`}
                 </p>
               </div>
               <div className="flex items-center justify-between py-3">
@@ -419,7 +428,7 @@ export default function Page() {
                   Total
                 </p>
                 <p className="font-poppins text-lg font-semibold text-[#141718]">
-                  ${total.toFixed(2)}
+                  ${totalAfterShipping.toFixed(2)}
                 </p>
               </div>
             </div>
