@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react';
 const contactDetails = [
     { icon: 'carbon:location-filled', label: 'Address', value: 'Australia' },
     { icon: 'mi:call', label: 'Phone', value: '9801177833' },
-    { icon: 'mdi:email-outline', label: 'Email', value: 'disdisplays@Gmail.Com' },
+    { icon: 'mdi:email-outline', label: 'Email', value: 'discountdisplays2023@Gmail.Com' },
     { icon: 'mdi:clock-outline', label: 'Time', value: '10:00 AM - 7:00 PM' },
 ];
 
@@ -23,7 +23,7 @@ const ContactPage = () => (
             <div className="w-full max-w-6xl flex flex-col md:flex-row md:p-8 p-4 md:gap-1 gap-10">
                 {/* Form */}
                 <div className="bg-white w-full md:w-1/2 p-6 rounded-md shadow-xl">
-                    <h2 className="lg:text-xl md:text-lg text-base font-cormorant mb-5">Send Message</h2>
+                    <h2 className="lg:text-xl md:text-lg text-base font-cormorant mb-5">Send yggjMessage</h2>
                     <form className="flex flex-col gap-4 w-full lg:text-base md:text-[13px] text-sm">
                         {formFields.map(({ type, label, placeholder }, i) => (
                             <div key={i} className="flex flex-col items-start justify-center gap-2">
