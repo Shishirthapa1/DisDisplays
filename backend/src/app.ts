@@ -9,6 +9,7 @@ import categoryRoutes from "./routes/category.routes";
 import paymentRoutes from "./routes/payment.routes";
 import orderRoutes from "./routes/order.routes";
 import shippingRoutes from "./routes/shipping.routes";
+import contactRoutes from "./routes/contact.routes";
 
 import { errorHandler } from "./middlewares/error.middleware";
 
@@ -31,6 +32,7 @@ app.use(`${baseApi}/categories`, categoryRoutes);
 app.use(`${baseApi}/payments`, paymentRoutes);
 app.use(`${baseApi}/order`, orderRoutes);
 app.use(`${baseApi}/shipping`, shippingRoutes);
+app.use(`${baseApi}/contact`, contactRoutes);
 
 // Error handler
 app.use(errorHandler);

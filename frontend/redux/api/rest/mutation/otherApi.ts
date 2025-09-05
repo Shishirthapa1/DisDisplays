@@ -4,6 +4,7 @@ import {
   CreatePaymentIntentResponse,
 } from "@/types/product";
 import { baseApi } from "../../restBaseApi";
+import { CreateContactPayload, CreateContactResponse } from "@/types/contact";
 
 const otherApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -94,6 +95,16 @@ const otherApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["ShippingInfo"],
     }),
+    createContact: builder.mutation<
+      CreateContactResponse,
+      CreateContactPayload
+    >({
+      query: (contactData) => ({
+        url: "/contact",
+        method: "POST",
+        body: contactData,
+      }),
+    }),
   }),
 });
 
@@ -108,4 +119,5 @@ export const {
   useCreateOrderMutation,
   useUpdateOrderMutation,
   useUpdateShippingMutation,
+  useCreateContactMutation,
 } = otherApi;

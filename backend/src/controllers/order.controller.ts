@@ -98,6 +98,7 @@ export const updateOrder = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Order status updated successfully",
+      status: 200,
       order: updatedOrder,
     });
   } catch (error) {
